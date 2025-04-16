@@ -18,8 +18,10 @@ import morgan from 'morgan';
 // --imports--
 import loggerApp from './utils/logger';
 import connectDB from './config/db';
-import { IUser } from './routes/authTypes';
-import authRouter from './types/authRoutes';
+import { IUser } from './types/authTypes';
+import authRouter from './routes/authRoutes';
+import authenticate from './middlewares/authenticate';
+import paymentRouter from './routes/paymentRoutes';
 
 // *********
 // **VARIABLES**
@@ -80,6 +82,7 @@ declare global {
 // *********
 // ROUTES
 app.use('/auth', authRouter);
+app.use('/payments', authenticate, paymentRouter);
 
 // *********
 // EXECUTION

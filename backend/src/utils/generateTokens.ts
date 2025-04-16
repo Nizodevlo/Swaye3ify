@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { ERole } from '../routes/authTypes';
+import { ERole } from '../types/authTypes';
 
 const generateToken = (secret: string, userId: string, role: ERole): string => {
   const token = jwt.sign({ userId, role }, secret);
