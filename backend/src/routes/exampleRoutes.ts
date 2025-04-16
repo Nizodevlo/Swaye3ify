@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { createSomething } from '../controllers/exampleController';
+import { createController } from './../controllers/exampleController';
+
 
 const exampleRouter = Router();
 
-exampleRouter.get('/', createSomething);
+exampleRouter.get('/', createController);
 
 // add the other endpoint
 

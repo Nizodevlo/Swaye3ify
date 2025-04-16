@@ -17,6 +17,7 @@ import morgan from 'morgan';
 
 // --imports--
 import loggerApp from './utils/logger';
+import connectDB from './config/db';
 
 // *********
 // **VARIABLES**
@@ -64,6 +65,7 @@ app.use(
 
 // *********
 // CONNECTION
+connectDB();
 
 // *********
 // ROUTES
