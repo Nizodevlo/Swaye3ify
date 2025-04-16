@@ -18,6 +18,8 @@ import morgan from 'morgan';
 // --imports--
 import loggerApp from './utils/logger';
 import connectDB from './config/db';
+import { IUser } from './routes/authTypes';
+import authRouter from './types/authRoutes';
 
 // *********
 // **VARIABLES**
@@ -67,8 +69,17 @@ app.use(
 // CONNECTION
 connectDB();
 
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IUser;
+    }
+  }
+}
+
 // *********
 // ROUTES
+app.use('/auth', authRouter);
 
 // *********
 // EXECUTION
