@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { ERole, IUser } from '../routes/authTypes';
+import { ERole, IUser } from '../types/authTypes';
 import bcrypt from 'bcrypt';
 
 interface IUserModelSchema extends IUser, Document {

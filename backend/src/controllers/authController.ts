@@ -4,7 +4,7 @@ import ApiError from '../utils/apiError';
 import ApiResponse from '../utils/apiResponse';
 import { asyncHandler } from '../utils/asyncHandler';
 import generateToken from '../utils/generateTokens';
-import { ERole } from '../routes/authTypes';
+import { ERole } from '../types/authTypes';
 
 // variables
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || '';
