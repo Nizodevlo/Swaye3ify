@@ -22,6 +22,7 @@ import { IUser } from './types/authTypes';
 import authRouter from './routes/authRoutes';
 import authenticate from './middlewares/authenticate';
 import paymentRouter from './routes/paymentRoutes';
+import attendanceRouter from './routes/attendanceRoutes';
 
 // *********
 // **VARIABLES**
@@ -83,6 +84,7 @@ declare global {
 // ROUTES
 app.use('/auth', authRouter);
 app.use('/payments', authenticate, paymentRouter);
+app.use('/attendances', authenticate, attendanceRouter);
 
 // *********
 // EXECUTION
