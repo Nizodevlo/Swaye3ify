@@ -3,6 +3,7 @@ export enum ERole {
   TEACHER = 'teacher',
 }
 
+
 export interface IUser {
   firstName: string;
   lastName: string;
@@ -12,3 +13,4 @@ export interface IUser {
   password: string;
   refreshToken?: string;
 }
+

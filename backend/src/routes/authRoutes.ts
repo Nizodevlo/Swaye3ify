@@ -27,8 +27,5 @@ authRouter.post('/refreshToken', refreshToken);
 authRouter.put('/:userId', /* authenticate */ updateUser);
 authRouter.delete('/:userId', /* authenticate */ deleteUser);
 
-authRouter.get('/staff', /* authenticate */ getAllStaff);
-authRouter.get('/parents', /* authenticate */ getAllParents);
-authRouter.get('/students', /* authenticate */ getAllStudents);
 
 export default authRouter;
