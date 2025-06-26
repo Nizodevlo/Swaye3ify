@@ -1,6 +1,6 @@
 import { Document, model, Schema } from 'mongoose';
-import { ERole, IUser } from '../types/authTypes';
 import bcrypt from 'bcrypt';
+import { ERole, IUser } from '../types/authTypes';
 
 interface IUserModelSchema extends IUser, Document {
   comparePassword(password: string): Promise<boolean>;
@@ -8,7 +8,11 @@ interface IUserModelSchema extends IUser, Document {
 
 const userSchema = new Schema<IUserModelSchema>(
   {
-    fullName: {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
       type: String,
       required: true,
     },
@@ -21,6 +25,10 @@ const userSchema = new Schema<IUserModelSchema>(
       type: String,
       required: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
     role: {
       type: String,
       enum: ERole,
@@ -28,7 +36,6 @@ const userSchema = new Schema<IUserModelSchema>(
     },
     refreshToken: {
       type: String,
-      required: true,
     },
   },
   { timestamps: true }

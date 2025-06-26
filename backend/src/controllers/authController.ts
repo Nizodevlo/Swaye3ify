@@ -13,6 +13,7 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || '';
 // Auth part
 
 export const register = asyncHandler(async (req, res) => {
+  console.log("body:", req.body)
   const { email } = req.body;
 
   const existingUser = await User.findOne({ email });

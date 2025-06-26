@@ -1,15 +1,14 @@
 export enum ERole {
   ADMIN = 'admin',
-  SECRETAIRE = 'secretaire',
   TEACHER = 'teacher',
-  STUDENT = 'student',
-  PARENT = 'parent',
 }
 
 export interface IUser {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  password: string;
+  phoneNumber: string;
   role: ERole;
-  refreshToken: string;
+  password: string;
+  refreshToken?: string;
 }

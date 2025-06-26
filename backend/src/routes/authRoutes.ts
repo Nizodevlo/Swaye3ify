@@ -18,17 +18,17 @@ const authRouter = Router();
 
 // Auth Part
 
-authRouter.post('/register', validateRequest(authValidationSchema), register);
+authRouter.post('/register', register);
 authRouter.post('/login', login);
 authRouter.post('/logout', logout);
 authRouter.post('/refreshToken', refreshToken);
 
 // CRUD part
-authRouter.put('/:userId', authenticate, validateRequest(authUpdateValidationSchema), updateUser);
-authRouter.delete('/:userId', authenticate, deleteUser);
+authRouter.put('/:userId', /* authenticate */ updateUser);
+authRouter.delete('/:userId', /* authenticate */ deleteUser);
 
-authRouter.get('/staff', authenticate, getAllStaff);
-authRouter.get('/parents', authenticate, getAllParents);
-authRouter.get('/students', authenticate, getAllStudents);
+authRouter.get('/staff', /* authenticate */ getAllStaff);
+authRouter.get('/parents', /* authenticate */ getAllParents);
+authRouter.get('/students', /* authenticate */ getAllStudents);
 
 export default authRouter;
