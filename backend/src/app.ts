@@ -20,6 +20,7 @@ import loggerApp from './utils/logger';
 import connectDB from './config/db';
 import { IUser } from './types/authTypes';
 import courRouter from './routes/courRoutes';
+import studentRouter from './routes/studentRoutes';
 
 // *********
 // **VARIABLES**
@@ -90,6 +91,7 @@ declare global {
 
 
 app.use('/api/v1/cours', courRouter);
+app.use('/api/v1/students', studentRouter);
 
 // *********
 // EXECUTION
