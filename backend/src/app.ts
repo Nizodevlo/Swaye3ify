@@ -19,6 +19,7 @@ import morgan from 'morgan';
 import loggerApp from './utils/logger';
 import connectDB from './config/db';
 import { IUser } from './types/authTypes';
+import courRouter from './routes/courRoutes';
 
 // *********
 // **VARIABLES**
@@ -80,6 +81,15 @@ declare global {
 // ROUTES
 // ex: app.use('/auth', authRouter);
 
+
+
+
+
+
+
+
+
+app.use('/api/v1/cours', courRouter);
 
 // *********
 // EXECUTION
