@@ -22,6 +22,7 @@ import { IUser } from './types/authTypes';
 import courRouter from './routes/courRoutes';
 import studentRouter from './routes/studentRoutes';
 import inscriptionRouter from './routes/inscriptionRoutes';
+import sessionRouter from './routes/sessionRoutes';
 
 // *********
 // **VARIABLES**
@@ -83,17 +84,11 @@ declare global {
 // ROUTES
 // ex: app.use('/auth', authRouter);
 
-
-
-
-
-
-
-
-
 app.use('/api/v1/cours', courRouter);
 app.use('/api/v1/students', studentRouter);
-app.use('/api/v1/inscriptions', inscriptionRouter)
+app.use('/api/v1/inscriptions', inscriptionRouter);
+
+app.use('/api/v1/sessions', sessionRouter);
 
 // *********
 // EXECUTION

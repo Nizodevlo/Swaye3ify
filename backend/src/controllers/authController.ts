@@ -13,7 +13,7 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || '';
 // Auth part
 
 export const register = asyncHandler(async (req, res) => {
-  console.log("body:", req.body)
+  console.log('body:', req.body);
   const { email } = req.body;
 
   const existingUser = await User.findOne({ email });
@@ -178,8 +178,8 @@ export const getAllStudents = asyncHandler(async (req, res) => {
   res.status(200).send(new ApiResponse(200, { students }, 'Students retrieved successfully ✅'));
 });
 
-export const getAllParents = asyncHandler(async (req, res) => {
-  const parents = await User.find({ role: ERole.PARENT });
+// export const getAllParents = asyncHandler(async (req, res) => {
+//   const parents = await User.find({ role: ERole.PARENT });
 
-  res.status(200).send(new ApiResponse(200, { parents }, 'Students retrieved successfully ✅'));
-});
+//   res.status(200).send(new ApiResponse(200, { parents }, 'Students retrieved successfully ✅'));
+// });

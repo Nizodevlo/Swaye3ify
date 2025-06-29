@@ -1,8 +1,8 @@
 export enum ERole {
   ADMIN = 'admin',
   TEACHER = 'teacher',
+  STUDENT = 'student',
 }
-
 
 export interface IUser {
   firstName: string;
@@ -13,4 +13,3 @@ export interface IUser {
   password: string;
   refreshToken?: string;
 }
-
