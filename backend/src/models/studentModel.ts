@@ -19,12 +19,11 @@ const studentSchema = new Schema<IStudentModelSchema>({
     },
     phoneNumber: {
         tpye: String,
-        required: true,
     },
     grade: {
         type: mongoose.Types.ObjectId,
-        ref: "Grade",
         required: true,
+        ref: "Grade",
     }
 }, {
     timestamps: true,
