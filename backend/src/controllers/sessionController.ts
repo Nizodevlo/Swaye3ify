@@ -30,7 +30,7 @@ export const addSession = asyncHandler(async (req: Request, res: Response) => {
 
   const existing = await Session.findOne({ day, startTime, endTime, coursId });
   if (existing) {
-    res.status(409).send(new ApiError(403, 'Session already exists!'));
+    res.status(409).send(new ApiError(409, 'Session already exists!'));
     return;
   }
 
@@ -49,7 +49,6 @@ export const addSession = asyncHandler(async (req: Request, res: Response) => {
 
 export const updateSession = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  console.log(id);
 
   const existing = await Session.findById(id);
 
