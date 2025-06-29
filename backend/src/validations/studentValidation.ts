@@ -5,7 +5,7 @@ const studentValidationSchema = z.object({
   firstName: z.string().min(2, 'first name must be at least 2 characters long'),
   lastName: z.string().min(2, 'last name must be at least 2 characters long'),
   email: z.string().email('Email must be valid'),
-  phoneNumber: z.string(),
+  phoneNumber: z.string().min(10, 'Phone number must be 10 numbers'),
 });
 
 const studentUpdateValidationSchema = studentValidationSchema.partial();
