@@ -23,6 +23,17 @@ class ApiError extends Error {
       Error.captureStackTrace(this, this.constructor);
     }
   }
+  toJSON() {
+    return {
+      statusCode: this.statusCode,
+      success: this.success,
+      message: this.message, // now explicitly included
+      data: this.data,
+      errors: this.errors,
+      name: this.name,
+      stack: this.stack,
+    };
+  }
 }
 
 export default ApiError;
