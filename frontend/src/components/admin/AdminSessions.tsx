@@ -1,12 +1,36 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search, Edit, Trash2, Calendar, Clock, MapPin, Users } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 const AdminSessions = () => {
   const [activeTab, setActiveTab] = useState("today");
@@ -22,7 +46,7 @@ const AdminSessions = () => {
         students: 12,
         maxStudents: 15,
         status: "In Progress",
-        duration: "1.5 hours"
+        duration: "1.5 hours",
       },
       {
         id: 2,
@@ -33,7 +57,7 @@ const AdminSessions = () => {
         students: 8,
         maxStudents: 12,
         status: "Scheduled",
-        duration: "1.5 hours"
+        duration: "1.5 hours",
       },
       {
         id: 3,
@@ -44,8 +68,8 @@ const AdminSessions = () => {
         students: 15,
         maxStudents: 15,
         status: "Scheduled",
-        duration: "1 hour"
-      }
+        duration: "1 hour",
+      },
     ],
     upcoming: [
       {
@@ -58,7 +82,7 @@ const AdminSessions = () => {
         maxStudents: 12,
         status: "Scheduled",
         duration: "1.5 hours",
-        date: "Tomorrow"
+        date: "Tomorrow",
       },
       {
         id: 5,
@@ -70,8 +94,8 @@ const AdminSessions = () => {
         maxStudents: 10,
         status: "Scheduled",
         duration: "1.5 hours",
-        date: "Tomorrow"
-      }
+        date: "Tomorrow",
+      },
     ],
     completed: [
       {
@@ -84,9 +108,9 @@ const AdminSessions = () => {
         maxStudents: 15,
         status: "Completed",
         duration: "1 hour",
-        date: "Yesterday"
-      }
-    ]
+        date: "Yesterday",
+      },
+    ],
   };
 
   const getStatusColor = (status: string) => {
@@ -105,13 +129,20 @@ const AdminSessions = () => {
   };
 
   const renderSessionCard = (session: any) => (
-    <Card key={session.id} className="bg-gray-900 border-gray-800 hover:border-purple-500 transition-colors">
+    <Card
+      key={session.id}
+      className="bg-gray-900 border-gray-800 hover:border-purple-500 transition-colors"
+    >
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-xl font-bold text-white mb-1">{session.course}</h3>
+            <h3 className="text-xl font-bold text-white mb-1">
+              {session.course}
+            </h3>
             <p className="text-purple-400">{session.tutor}</p>
-            {session.date && <p className="text-gray-400 text-sm">{session.date}</p>}
+            {session.date && (
+              <p className="text-gray-400 text-sm">{session.date}</p>
+            )}
           </div>
           <Badge className={getStatusColor(session.status)}>
             {session.status}
@@ -129,7 +160,9 @@ const AdminSessions = () => {
           </div>
           <div className="flex items-center space-x-2 text-gray-400">
             <Users className="w-4 h-4" />
-            <span className="text-sm">{session.students}/{session.maxStudents}</span>
+            <span className="text-sm">
+              {session.students}/{session.maxStudents}
+            </span>
           </div>
           <div className="flex items-center space-x-2 text-gray-400">
             <Calendar className="w-4 h-4" />
@@ -139,17 +172,27 @@ const AdminSessions = () => {
 
         <div className="flex justify-between items-center">
           <div className="w-full bg-gray-800 rounded-full h-2 mr-4">
-            <div 
-              className="bg-purple-600 h-2 rounded-full" 
-              style={{ width: `${(session.students / session.maxStudents) * 100}%` }}
+            <div
+              className="bg-purple-600 h-2 rounded-full"
+              style={{
+                width: `${(session.students / session.maxStudents) * 100}%`,
+              }}
             ></div>
           </div>
           <div className="flex space-x-2">
-            <Button size="sm" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-gray-600 text-white bg-green-500 hover:bg-white"
+            >
               <Edit className="w-4 h-4 mr-1" />
               Edit
             </Button>
-            <Button size="sm" variant="outline" className="border-red-600 text-red-400 hover:bg-red-900/20">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-red-600 text-red-400 hover:bg-red-500 hover:text-white"
+            >
               <Trash2 className="w-4 h-4" />
             </Button>
           </div>
@@ -163,13 +206,174 @@ const AdminSessions = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Session Management</h1>
-          <p className="text-gray-400">Schedule sessions, manage attendance, and track progress</p>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Session Management
+          </h1>
+          <p className="text-gray-400">
+            Schedule sessions, manage attendance, and track progress
+          </p>
         </div>
-        <Button className="bg-purple-600 hover:bg-purple-700">
-          <Plus className="w-4 h-4 mr-2" />
-          Schedule Session
-        </Button>
+        <Dialog>
+          <form>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="inline-flex border-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 bg-purple-600 hover:bg-purple-700 hover:text-white"
+              >
+                <Plus className="w-4 h-4 mr-2" /> Schedule New Session
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px] bg-gray-900 text-white">
+              <DialogHeader>
+                <DialogTitle>Add New Session</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4">
+                <div className="grid gap-3">
+                  <Label htmlFor="session-1">Title</Label>
+                  <Input
+                    id="session-1"
+                    name="session"
+                    placeholder="Session title"
+                    className="bg-gray-800 placeholder:text-white outline-none"
+                  />
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="tutor">Tutors</Label>
+                  <Select>
+                    <SelectTrigger
+                      id="tutor"
+                      className="w-full bg-gray-800 border-gray-700 text-white"
+                    >
+                      <SelectValue placeholder="Select a tutor" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-800 border-gray-700 text-white w-full group data-[state=open]:bg-gray-800">
+                      <SelectItem
+                        value="tutor-1"
+                        className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
+                      >
+                        Tutor 1
+                      </SelectItem>
+                      <SelectItem
+                        value="tutor-2"
+                        className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
+                      >
+                        Tutor 2
+                      </SelectItem>
+                      <SelectItem
+                        value="tutor-3"
+                        className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
+                      >
+                        Tutor 3
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex justify-between align-items gap-3">
+                  <div className="startTime">
+                    <Label htmlFor="sTime">Start Time</Label>
+                    <Input
+                      type="datetime-local"
+                      id="sTime"
+                      name="sTime"
+                      className="bg-gray-800 placeholder:text-white outline-none"
+                    />
+                  </div>
+                  <div className="endTime">
+                    <Label htmlFor="eTime">End Time</Label>
+                    <Input
+                      type="datetime-local"
+                      id="eTime"
+                      name="eTime"
+                      className="bg-gray-800 placeholder:text-white outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="classroom">Classroom</Label>
+                  <Select>
+                    <SelectTrigger className="w-full bg-gray-800 border-gray-700 text-white">
+                      <SelectValue placeholder="Select a classroom" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-800 border-gray-700 text-white w-full group data-[state=open]:bg-gray-800">
+                      <SelectItem
+                        value="tronc"
+                        className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
+                      >
+                        Classroom A1
+                      </SelectItem>
+                      <SelectItem
+                        value="1bac"
+                        className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
+                      >
+                        Classroom A2
+                      </SelectItem>
+                      <SelectItem
+                        value="2bac"
+                        className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
+                      >
+                        Classroom B1
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {/* <div className="grid gap-3">
+                  <Label htmlFor="subject">Subject</Label>
+                  <Select>
+                    <SelectTrigger className="w-full bg-gray-800 border-gray-700 text-white">
+                      <SelectValue placeholder="Select a subject" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-800 border-gray-700 text-white w-full group data-[state=open]:bg-gray-800">
+                      <SelectItem
+                        value="francais"
+                        className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
+                      >
+                        Francais
+                      </SelectItem>
+                      <SelectItem
+                        value="english"
+                        className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
+                      >
+                        English
+                      </SelectItem>
+                      <SelectItem
+                        value="math"
+                        className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
+                      >
+                        Math
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="price">Price</Label>
+                  <Input
+                    id="price"
+                    name="price"
+                    type="number"
+                    placeholder="Course title"
+                    className="bg-gray-800 placeholder:text-white outline-none"
+                  />
+                </div> */}
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button
+                    variant="outline"
+                    className="text-black hover:bg-red-500 border hover:border-red-500 duration-300 hover:text-white"
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  className="bg-purple-500 duration-300 hover:bg-purple-700"
+                >
+                  Save changes
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </form>
+        </Dialog>
       </div>
 
       {/* Filters */}
@@ -212,13 +416,22 @@ const AdminSessions = () => {
       {/* Sessions Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-gray-800">
-          <TabsTrigger value="today" className="text-white data-[state=active]:bg-purple-600">
+          <TabsTrigger
+            value="today"
+            className="text-white data-[state=active]:bg-purple-600"
+          >
             Today's Sessions
           </TabsTrigger>
-          <TabsTrigger value="upcoming" className="text-white data-[state=active]:bg-purple-600">
+          <TabsTrigger
+            value="upcoming"
+            className="text-white data-[state=active]:bg-purple-600"
+          >
             Upcoming
           </TabsTrigger>
-          <TabsTrigger value="completed" className="text-white data-[state=active]:bg-purple-600">
+          <TabsTrigger
+            value="completed"
+            className="text-white data-[state=active]:bg-purple-600"
+          >
             Completed
           </TabsTrigger>
         </TabsList>
@@ -240,34 +453,40 @@ const AdminSessions = () => {
       <div className="grid md:grid-cols-4 gap-6">
         <Card className="bg-gray-900 border-gray-800">
           <CardHeader>
-            <CardTitle className="text-white text-lg">Today's Sessions</CardTitle>
+            <CardTitle className="text-white text-lg">
+              Today's Sessions
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-purple-400">8</div>
             <p className="text-gray-400 text-sm">3 completed, 5 scheduled</p>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gray-900 border-gray-800">
           <CardHeader>
-            <CardTitle className="text-white text-lg">Weekly Sessions</CardTitle>
+            <CardTitle className="text-white text-lg">
+              Weekly Sessions
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-blue-400">45</div>
             <p className="text-gray-400 text-sm">+8% from last week</p>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gray-900 border-gray-800">
           <CardHeader>
-            <CardTitle className="text-white text-lg">Attendance Rate</CardTitle>
+            <CardTitle className="text-white text-lg">
+              Attendance Rate
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-green-400">92%</div>
             <p className="text-gray-400 text-sm">Average attendance</p>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gray-900 border-gray-800">
           <CardHeader>
             <CardTitle className="text-white text-lg">Session Hours</CardTitle>
