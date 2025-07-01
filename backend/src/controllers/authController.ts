@@ -162,24 +162,10 @@ export const deleteUser = asyncHandler(async (req, res) => {
   res.status(200).send(new ApiResponse(200, { deletedUser }, 'User deleted successfuly ✅'));
 });
 
-export const getAllStaff = asyncHandler(async (req, res) => {
+export const getAllTeacher = asyncHandler(async (req, res) => {
   const staff = await User.find({
-    role: {
-      $nin: ['student', 'parent'],
-    },
+    role: 'teacher',
   });
 
-  res.status(200).send(new ApiResponse(200, { staff }, 'Staff retrieved successfully ✅'));
-});
-
-export const getAllStudents = asyncHandler(async (req, res) => {
-  const students = await User.find({ role: ERole.STUDENT });
-
-  res.status(200).send(new ApiResponse(200, { students }, 'Students retrieved successfully ✅'));
-});
-
-export const getAllParents = asyncHandler(async (req, res) => {
-  const parents = await User.find({ role: ERole.PARENT });
-
-  res.status(200).send(new ApiResponse(200, { parents }, 'Students retrieved successfully ✅'));
+  res.status(200).send(new ApiResponse(200, { staff }, 'Teachers retrieved successfully ✅'));
 });

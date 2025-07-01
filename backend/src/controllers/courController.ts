@@ -5,9 +5,13 @@ import { Cour } from "../models/courModel";
 import mongoose from "mongoose";
 
 export const createCour = asyncHandler(async (req, res) => {
+
     const { courName } = req.body;
+    
 
     const existingCour = await Cour.findOne({ courName });
+
+    console.log("Existing :", existingCour)
 
     if(existingCour) {
         res.status(400).send(new ApiError(400, 'Cour already exists ❌'));
@@ -16,7 +20,8 @@ export const createCour = asyncHandler(async (req, res) => {
 
     const newCour = new Cour({
         ...req.body,
-        teacher: new mongoose.Types.ObjectId(req.body.teacher),
+        prix: parseInt(req.body.prix),
+        teacher: new mongoose.Types.ObjectId('5ae4cedafe51b99a8ff1b022'),
         subject: new mongoose.Types.ObjectId(req.body.subject),
         grade: new mongoose.Types.ObjectId(req.body.grade),
     });
@@ -42,7 +47,11 @@ export const updateCour = asyncHandler(async (req, res) => {
 
     const updatedCour = await Cour.findByIdAndUpdate(
         courId,
-        { ...req.body }
+        { ...req.body
+            ,prix: parseInt(req.body.prix),
+        teacher: new mongoose.Types.ObjectId('5ae4cedafe51b99a8ff1b022'),
+        subject: new mongoose.Types.ObjectId(req.body.subject),
+        grade: new mongoose.Types.ObjectId(req.body.grade) }
     );
 
     res.status(200).send(

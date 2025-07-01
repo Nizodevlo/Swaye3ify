@@ -3,10 +3,10 @@ import * as z from 'zod';
 
 const courValidationSchema = z.object({
     courName: z.string(),
-    prix: z.number(),
     teacher: z.string(),
-    subject: z.string(),
     grade: z.string(),
+    subject: z.string(),
+    prix: z.number(),
 });
 
 const courUpdateValidationSchema = courValidationSchema.partial();

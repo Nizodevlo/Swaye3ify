@@ -9,7 +9,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 
 // --requestHandlers--
-import bodyParser from 'body-parser';
+// import bodyParser from 'body-parser'; // You can remove this import if you switch to express.json()
 import cookieParser from 'cookie-parser';
 
 // --logger--
@@ -26,6 +26,8 @@ import sessionRouter from './routes/sessionRoutes';
 import paimentRouter from './routes/paimentRoutes';
 import attendanceRouter from './routes/attendanceRoutes';
 import salleRouter from './routes/salleRoutes';
+import gradeRouter from './routes/gradeRoutes';
+import subjectRouter from './routes/subjectRoutes';
 
 // *********
 // **VARIABLES**
@@ -40,7 +42,7 @@ const morganFormat = ':method :url :status :response-time ms';
 // --security--
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:8080',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -48,10 +50,10 @@ app.use(
 );
 app.use(helmet());
 
-// --req-middleware--
-app.use(bodyParser.json({ limit: '16kb' }));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+// **Crucial: Place body parsing middleware here, BEFORE your routes**
+app.use(express.json({ limit: '16kb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // cookieParser can be after body parsing
 
 // --logger--
 app.use(
@@ -94,6 +96,8 @@ app.use('/api/v1/sessions', sessionRouter);
 app.use('/api/v1/paiments', paimentRouter);
 app.use('/api/v1/attendance', attendanceRouter);
 app.use('/api/v1/salle', salleRouter);
+app.use('/api/v1/grades', gradeRouter);
+app.use('/api/v1/subjects', subjectRouter);
 
 // *********
 // EXECUTION
