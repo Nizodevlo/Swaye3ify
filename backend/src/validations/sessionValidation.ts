@@ -10,7 +10,8 @@ export const sessionSchema = z.object({
   startTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Start time must be in HH:mm format'),
   endTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'End time must be in HH:mm format'),
   coursId: z.string().regex(objectIdRegex, { message: 'coursId must be a valid MongoDB ObjectId' }),
-  //   salleId: z.string().uuid({ message: 'salleId must be a valid UUID' }),
+  salleId: z.string().regex(objectIdRegex, { message: 'salleId must be a valid MongoDB ObjectId' }),
+  // salleId: z.string().uuid({ message: 'salleId must be a valid UUID' }),
 });
 
 export const sessionUpdateSchema = sessionSchema.partial();

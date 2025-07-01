@@ -22,11 +22,11 @@ const sessionSchema = new Schema<ISessionModelSchema>(
       ref: 'Cour',
       required: true,
     },
-    // salleId: {
-    //   type: mongoose.Types.ObjectId,
-    //   ref: 'Salle',
-    //   required: true,
-    // },
+    salleId: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Salle',
+      required: true,
+    },
   },
   {
     timestamps: true,

@@ -24,6 +24,8 @@ import studentRouter from './routes/studentRoutes';
 import inscriptionRouter from './routes/inscriptionRoutes';
 import sessionRouter from './routes/sessionRoutes';
 import paimentRouter from './routes/paimentRoutes';
+import attendanceRouter from './routes/attendanceRoutes';
+import salleRouter from './routes/salleRoutes';
 
 // *********
 // **VARIABLES**
@@ -90,6 +92,8 @@ app.use('/api/v1/students', studentRouter);
 app.use('/api/v1/inscriptions', inscriptionRouter);
 app.use('/api/v1/sessions', sessionRouter);
 app.use('/api/v1/paiments', paimentRouter);
+app.use('/api/v1/attendance', attendanceRouter);
+app.use('/api/v1/salle', salleRouter);
 
 // *********
 // EXECUTION

@@ -1,4 +1,5 @@
 import { ICourModelSchema } from '../models/courModel';
+import { IsallemodelSchema } from '../models/salleModel';
 
 // 1. Define the enum
 export enum Day {
@@ -17,5 +18,5 @@ export interface ISession {
   startTime: string;
   endTime: string;
   coursId: ICourModelSchema['_id'];
-  //   salleId: ISalleModelSchema['_id'];
+  salleId: IsallemodelSchema['_id'];
 }

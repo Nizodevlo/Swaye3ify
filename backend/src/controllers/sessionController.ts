@@ -21,14 +21,14 @@ export const getSessionById = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const addSession = asyncHandler(async (req: Request, res: Response) => {
-  const { day, startTime, endTime, coursId } = req.body;
+  const { day, startTime, endTime, coursId, salleId } = req.body;
 
-  if (!day || !startTime || !endTime || !coursId) {
+  if (!day || !startTime || !endTime || !coursId || !salleId) {
     res.status(400).send(new ApiError(403, 'All fields are required!'));
     return;
   }
 
-  const existing = await Session.findOne({ day, startTime, endTime, coursId });
+  const existing = await Session.findOne({ day, startTime, endTime, coursId, salleId });
   if (existing) {
     res.status(409).send(new ApiError(409, 'Session already exists!'));
     return;
@@ -39,7 +39,7 @@ export const addSession = asyncHandler(async (req: Request, res: Response) => {
     startTime,
     endTime,
     coursId,
-    // salleId,
+    salleId,
   });
 
   await newSession.save();
