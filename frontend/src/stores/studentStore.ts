@@ -98,3 +98,5 @@ const useStudentStore = create<IStore<IStudentState, IStudentActions>>((set) => 
 
 export const useStudents = () => useStudentStore((state) => state.students);
 export const useStudentActions = () => useStudentStore((state) => state.actions);
+export const useStudentLoading = () => useStudentStore((state) => state.loading) ;
+export const useStudentError = () => useStudentStore((state) => state.error);

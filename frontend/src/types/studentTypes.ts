@@ -7,7 +7,7 @@ export interface IStudent {
   grade: string;
 }
 
-export interface IStudentResponse extends IUser {
+export interface IStudentResponse extends IStudent {
     _id: string
 }
 
