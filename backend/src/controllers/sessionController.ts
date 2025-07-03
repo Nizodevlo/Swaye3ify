@@ -3,10 +3,19 @@ import { Request, Response } from 'express';
 import ApiError from '../utils/apiError';
 import ApiResponse from '../utils/apiResponse';
 import { asyncHandler } from '../utils/asyncHandler';
+import { Day } from '../models/dayModel';
 
 export const getSessions = asyncHandler(async (req: Request, res: Response) => {
-  const sessions = await Session.find();
+  const sessions = await Session.find()
+    .populate({ path: 'coursId', populate: [{ path: 'teacher', select: 'firstName lastName' }] })
+    .populate('salleId');
   res.status(200).send(new ApiResponse(200, sessions, 'Sessions fetched successfully'));
+  return;
+});
+
+export const getDays = asyncHandler(async (req: Request, res: Response) => {
+  const days = await Day.find();
+  res.status(200).send(new ApiResponse(200, { days }, 'Days fetched successfully'));
   return;
 });
 

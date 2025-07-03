@@ -28,6 +28,8 @@ import attendanceRouter from './routes/attendanceRoutes';
 import salleRouter from './routes/salleRoutes';
 import gradeRouter from './routes/gradeRoutes';
 import subjectRouter from './routes/subjectRoutes';
+import dayRouter from './routes/dayRoutes';
+import authRouter from './routes/authRoutes';
 
 // *********
 // **VARIABLES**
@@ -87,15 +89,16 @@ declare global {
 
 // *********
 // ROUTES
-// ex: app.use('/auth', authRouter);
+ex: app.use('/auth', authRouter);
 
 app.use('/api/v1/cours', courRouter);
 app.use('/api/v1/students', studentRouter);
 app.use('/api/v1/inscriptions', inscriptionRouter);
 app.use('/api/v1/sessions', sessionRouter);
 app.use('/api/v1/paiments', paimentRouter);
-app.use('/api/v1/attendance', attendanceRouter);
-app.use('/api/v1/salle', salleRouter);
+app.use('/api/v1/attendances', attendanceRouter);
+app.use('/api/v1/days', dayRouter);
+app.use('/api/v1/salles', salleRouter);
 app.use('/api/v1/grades', gradeRouter);
 app.use('/api/v1/subjects', subjectRouter);
 

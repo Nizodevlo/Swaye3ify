@@ -20,7 +20,7 @@ export const createSalle = asyncHandler(async (req, res) => {
 
   await newSalle.save();
 
-  res.status(201).send(new ApiResponse(201, { newSalle }, 'Salle created successfully ✅'));
+  res.status(201).send(new ApiResponse(201, { salle: newSalle }, 'Salle created successfully ✅'));
 });
 
 export const updateSalle = asyncHandler(async (req, res) => {

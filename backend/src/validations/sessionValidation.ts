@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { Day } from '../types/sessionTypes';
+import { EDay } from '../types/sessionTypes';
 
-const dayEnumValues = Object.values(Day) as [string, ...string[]];
+const dayEnumValues = Object.values(EDay) as [string, ...string[]];
 
 const objectIdRegex = /^[a-f\d]{24}$/i;
 

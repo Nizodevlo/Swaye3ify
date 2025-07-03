@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import {
   deleteUser,
-  getAllParents,
-  getAllStaff,
-  getAllStudents,
+  // getAllParents,
+  // getAllStaff,
+  // getAllStudents,
   login,
   logout,
   refreshToken,
@@ -26,6 +26,5 @@ authRouter.post('/refreshToken', refreshToken);
 // CRUD part
 authRouter.put('/:userId', /* authenticate */ updateUser);
 authRouter.delete('/:userId', /* authenticate */ deleteUser);
-
 
 export default authRouter;

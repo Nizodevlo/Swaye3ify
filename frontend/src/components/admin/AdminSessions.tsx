@@ -1,96 +1,58 @@
 // app/admin/sessions/page.tsx
-import { useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Download } from "lucide-react";
 import { SessionFilters } from "./sessionCompos/SessionFilters";
 import { SessionTabs } from "./sessionCompos/SessionTabs";
-import { SessionDialog } from "./sessionCompos/SessionDialog";
-import { SessionStats } from "./sessionCompos/sessionStats";
-
-const sessions = {
-  today: [
-    {
-      id: 1,
-      course: "Advanced Mathematics",
-      tutor: "Dr. Sarah Ahmed",
-      time: "10:00 AM - 11:30 AM",
-      room: "Room A1",
-      students: 12,
-      maxStudents: 15,
-      status: "In Progress",
-      duration: "1.5 hours",
-    },
-    {
-      id: 2,
-      course: "Physics Fundamentals",
-      tutor: "Prof. Hassan Alami",
-      time: "2:00 PM - 3:30 PM",
-      room: "Room B2",
-      students: 8,
-      maxStudents: 12,
-      status: "Scheduled",
-      duration: "1.5 hours",
-    },
-    {
-      id: 3,
-      course: "English Literature",
-      tutor: "Ms. Fatima Benali",
-      time: "4:00 PM - 5:00 PM",
-      room: "Room C3",
-      students: 15,
-      maxStudents: 15,
-      status: "Scheduled",
-      duration: "1 hour",
-    },
-  ],
-  upcoming: [
-    {
-      id: 4,
-      course: "Chemistry Basics",
-      tutor: "Dr. Mohamed Tazi",
-      time: "9:00 AM - 10:30 AM",
-      room: "Lab 1",
-      students: 10,
-      maxStudents: 12,
-      status: "Scheduled",
-      duration: "1.5 hours",
-      date: "Tomorrow",
-    },
-    {
-      id: 5,
-      course: "Advanced Physics",
-      tutor: "Prof. Hassan Alami",
-      time: "11:00 AM - 12:30 PM",
-      room: "Room B1",
-      students: 6,
-      maxStudents: 10,
-      status: "Scheduled",
-      duration: "1.5 hours",
-      date: "Tomorrow",
-    },
-  ],
-  completed: [
-    {
-      id: 6,
-      course: "Basic Mathematics",
-      tutor: "Ms. Aicha Bennani",
-      time: "9:00 AM - 10:00 AM",
-      room: "Room A2",
-      students: 14,
-      maxStudents: 15,
-      status: "Completed",
-      duration: "1 hour",
-      date: "Yesterday",
-    },
-  ],
-};
+import { SessionDialog } from "./sessionCompos/SessionDialog"; // Import SessionDialog directly
+import { SessionStats } from "./sessionCompos/SessionStats";
+import { useSessions, useSessionsActions } from "@/stores/sessionStore";
+import { ISessionPop, ISession } from "@/types/sessionTypes"; // Import ISession for types
 
 export default function AdminSessions() {
-  const [activeTab, setActiveTab] = useState("today");
+  const [activeTab, setActiveTab] = useState("today"); // Not used yet, but kept
+  const sessions = useSessions(); // Get sessions from the store
+  const { deleteSession, getAllSession, addSession } = useSessionsActions(); // Get actions from the store
 
-  const handleCreateSession = (sessionData: any) => {
-    console.log("Creating new session:", sessionData);
-    // Implement your create logic here
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // State to control dialog open/close
+  const [dialogMode, setDialogMode] = useState<"create" | "edit">("create"); // State for dialog mode
+  const [sessionToEdit, setSessionToEdit] = useState<ISessionPop | undefined>(
+    undefined
+  ); // State to hold data for editing
+
+  // Fetch all sessions on component mount using the store action
+  useEffect(() => {
+    getAllSession();
+  }, [getAllSession]);
+
+  const handleDelete = async (id: string) => {
+    await deleteSession(id); // The store's deleteSession action will now re-fetch sessions automatically
+  };
+
+  const handleCreateSessionClick = () => {
+    setDialogMode("create");
+    setSessionToEdit(undefined); // Clear any previous editing data
+    setIsDialogOpen(true); // Open the dialog for creation
+  };
+
+  const handleEditSession = (session: ISessionPop) => {
+    setDialogMode("edit");
+    setSessionToEdit(session); // Set the session data to be edited
+    setIsDialogOpen(true); // Open the dialog for editing
+  };
+
+  // This function is passed to SessionDialog's onSubmit, but the actual store
+  // actions are called directly within SessionDialog. This can be simplified.
+  // For now, we'll keep it as a placeholder.
+  const handleDialogSubmit = () => {
+    // This callback is triggered when the dialog's form is submitted.
+    // The actual add/update logic is within SessionDialog using store actions.
+    // You might want to re-fetch all sessions here if the store actions don't already.
+    // However, since we updated the store actions to call getAllSession, this might be redundant.
+    // For now, it simply ensures the dialog closes.
+    setIsDialogOpen(false); // Make sure dialog closes after any submission
+    setSessionToEdit(undefined); // Clear editing session data
   };
 
   return (
@@ -113,230 +75,76 @@ export default function AdminSessions() {
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <SessionDialog onSubmit={handleCreateSession}>
-            <Button
-              variant="outline"
-              className="inline-flex border-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 bg-purple-600 hover:bg-purple-700 hover:text-white"
-            >
-              <Plus className="w-4 h-4 mr-2" /> Schedule New Session
-            </Button>
-          </SessionDialog>
+          {/* Trigger the SessionDialog for creation */}
+          <Button
+            variant="outline"
+            className="inline-flex border-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 bg-purple-600 hover:bg-purple-700 hover:text-white"
+            onClick={handleCreateSessionClick} // Open dialog for creation
+          >
+            <Plus className="w-4 h-4 mr-2" /> Schedule New Session
+          </Button>
         </div>
       </div>
 
       <SessionFilters />
+      {/* Pass the onEditSession handler to SessionTabs */}
       <SessionTabs
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
         sessions={sessions}
+        onDelete={handleDelete}
+        onEditSession={handleEditSession}
       />
       <SessionStats />
+
+      {/* Render the SessionDialog separately and control its open state */}
+      <SessionDialog
+        mode={dialogMode}
+        sessionData={sessionToEdit} // Pass the session data for editing
+        open={isDialogOpen} // Control dialog visibility
+        onOpenChange={setIsDialogOpen} // Allow dialog to control its own open state (e.g., when closing via escape/overlay)
+        onSubmit={handleDialogSubmit} // Callback after submission (dialog will close itself)
+      >
+        {/* Children prop for SessionDialog is not needed here as it's not a trigger anymore */}
+      </SessionDialog>
     </div>
   );
 }
 
-// import { useState } from "react";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// // app/admin/sessions/page.tsx
+// "use client"; // Add this directive for client-side components if not already present
+// import { useEffect, useState } from "react";
 // import { Button } from "@/components/ui/button";
-// import { Badge } from "@/components/ui/badge";
-// import { Input } from "@/components/ui/input";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import {
-//   Plus,
-//   Search,
-//   Edit,
-//   Trash2,
-//   Calendar,
-//   Clock,
-//   MapPin,
-//   Users,
-// } from "lucide-react";
-// import {
-//   Dialog,
-//   DialogClose,
-//   DialogContent,
-//   DialogFooter,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from "@/components/ui/dialog";
-// import { Label } from "@/components/ui/label";
+// import { Plus, Download } from "lucide-react";
+// import { SessionFilters } from "./sessionCompos/SessionFilters";
+// import { SessionTabs } from "./sessionCompos/SessionTabs";
+// import { SessionDialog } from "./sessionCompos/SessionDialog";
+// import { SessionStats } from "./sessionCompos/SessionStats";
+// import { useSessions, useSessionsActions } from "@/stores/sessionStore"; // Import useSessions from your store
+// // Removed direct import of getAllSession from apis, as store will handle fetching
 
-// const AdminSessions = () => {
+// export default function AdminSessions() {
 //   const [activeTab, setActiveTab] = useState("today");
+//   // Get sessions directly from the store
+//   const sessions = useSessions();
+//   const { deleteSession, getAllSession } = useSessionsActions(); // Get actions from the store
 
-//   const sessions = {
-//     today: [
-//       {
-//         id: 1,
-//         course: "Advanced Mathematics",
-//         tutor: "Dr. Sarah Ahmed",
-//         time: "10:00 AM - 11:30 AM",
-//         room: "Room A1",
-//         students: 12,
-//         maxStudents: 15,
-//         status: "In Progress",
-//         duration: "1.5 hours",
-//       },
-//       {
-//         id: 2,
-//         course: "Physics Fundamentals",
-//         tutor: "Prof. Hassan Alami",
-//         time: "2:00 PM - 3:30 PM",
-//         room: "Room B2",
-//         students: 8,
-//         maxStudents: 12,
-//         status: "Scheduled",
-//         duration: "1.5 hours",
-//       },
-//       {
-//         id: 3,
-//         course: "English Literature",
-//         tutor: "Ms. Fatima Benali",
-//         time: "4:00 PM - 5:00 PM",
-//         room: "Room C3",
-//         students: 15,
-//         maxStudents: 15,
-//         status: "Scheduled",
-//         duration: "1 hour",
-//       },
-//     ],
-//     upcoming: [
-//       {
-//         id: 4,
-//         course: "Chemistry Basics",
-//         tutor: "Dr. Mohamed Tazi",
-//         time: "9:00 AM - 10:30 AM",
-//         room: "Lab 1",
-//         students: 10,
-//         maxStudents: 12,
-//         status: "Scheduled",
-//         duration: "1.5 hours",
-//         date: "Tomorrow",
-//       },
-//       {
-//         id: 5,
-//         course: "Advanced Physics",
-//         tutor: "Prof. Hassan Alami",
-//         time: "11:00 AM - 12:30 PM",
-//         room: "Room B1",
-//         students: 6,
-//         maxStudents: 10,
-//         status: "Scheduled",
-//         duration: "1.5 hours",
-//         date: "Tomorrow",
-//       },
-//     ],
-//     completed: [
-//       {
-//         id: 6,
-//         course: "Basic Mathematics",
-//         tutor: "Ms. Aicha Bennani",
-//         time: "9:00 AM - 10:00 AM",
-//         room: "Room A2",
-//         students: 14,
-//         maxStudents: 15,
-//         status: "Completed",
-//         duration: "1 hour",
-//         date: "Yesterday",
-//       },
-//     ],
+//   // Fetch all sessions on component mount using the store action
+//   useEffect(() => {
+//     getAllSession();
+//   }, [getAllSession]); // Depend on getAllSession action
+
+//   const handleDelete = async (id: string) => {
+//     // The store's deleteSession action will now re-fetch sessions automatically
+//     await deleteSession(id);
+//     // No need to manually update local state (setSessions) here
 //   };
 
-//   const getStatusColor = (status: string) => {
-//     switch (status) {
-//       case "In Progress":
-//         return "bg-green-900/50 text-green-400 border-green-700";
-//       case "Scheduled":
-//         return "bg-blue-900/50 text-blue-400 border-blue-700";
-//       case "Completed":
-//         return "bg-gray-700 text-gray-300";
-//       case "Cancelled":
-//         return "bg-red-900/50 text-red-400 border-red-700";
-//       default:
-//         return "bg-gray-700 text-gray-300";
-//     }
+//   // This function is still used by SessionDialog for its onSubmit prop.
+//   // The actual session creation logic will be handled within SessionDialog
+//   // by calling `addSession` from the store.
+//   const handleCreateSession = () => {
+//     // This can remain empty or log for debugging, as the store action handles the creation.
+//     // The dialog will handle closing itself after the store action completes.
 //   };
-
-//   const renderSessionCard = (session: any) => (
-//     <Card
-//       key={session.id}
-//       className="bg-gray-900 border-gray-800 hover:border-purple-500 transition-colors"
-//     >
-//       <CardContent className="p-6">
-//         <div className="flex items-center justify-between mb-4">
-//           <div>
-//             <h3 className="text-xl font-bold text-white mb-1">
-//               {session.course}
-//             </h3>
-//             <p className="text-purple-400">{session.tutor}</p>
-//             {session.date && (
-//               <p className="text-gray-400 text-sm">{session.date}</p>
-//             )}
-//           </div>
-//           <Badge className={getStatusColor(session.status)}>
-//             {session.status}
-//           </Badge>
-//         </div>
-
-//         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-//           <div className="flex items-center space-x-2 text-gray-400">
-//             <Clock className="w-4 h-4" />
-//             <span className="text-sm">{session.time}</span>
-//           </div>
-//           <div className="flex items-center space-x-2 text-gray-400">
-//             <MapPin className="w-4 h-4" />
-//             <span className="text-sm">{session.room}</span>
-//           </div>
-//           <div className="flex items-center space-x-2 text-gray-400">
-//             <Users className="w-4 h-4" />
-//             <span className="text-sm">
-//               {session.students}/{session.maxStudents}
-//             </span>
-//           </div>
-//           <div className="flex items-center space-x-2 text-gray-400">
-//             <Calendar className="w-4 h-4" />
-//             <span className="text-sm">{session.duration}</span>
-//           </div>
-//         </div>
-
-//         <div className="flex justify-between items-center">
-//           <div className="w-full bg-gray-800 rounded-full h-2 mr-4">
-//             <div
-//               className="bg-purple-600 h-2 rounded-full"
-//               style={{
-//                 width: `${(session.students / session.maxStudents) * 100}%`,
-//               }}
-//             ></div>
-//           </div>
-//           <div className="flex space-x-2">
-//             <Button
-//               size="sm"
-//               variant="outline"
-//               className="border-gray-600 text-white bg-green-500 hover:bg-white"
-//             >
-//               <Edit className="w-4 h-4 mr-1" />
-//               Edit
-//             </Button>
-//             <Button
-//               size="sm"
-//               variant="outline"
-//               className="border-red-600 text-red-400 hover:bg-red-500 hover:text-white"
-//             >
-//               <Trash2 className="w-4 h-4" />
-//             </Button>
-//           </div>
-//         </div>
-//       </CardContent>
-//     </Card>
-//   );
 
 //   return (
 //     <div className="p-8 space-y-8">
@@ -350,254 +158,105 @@ export default function AdminSessions() {
 //             Schedule sessions, manage attendance, and track progress
 //           </p>
 //         </div>
-//         <Dialog>
-//           <form>
-//             <DialogTrigger asChild>
-//               <Button
-//                 variant="outline"
-//                 className="inline-flex border-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 bg-purple-600 hover:bg-purple-700 hover:text-white"
-//               >
-//                 <Plus className="w-4 h-4 mr-2" /> Schedule New Session
-//               </Button>
-//             </DialogTrigger>
-//             <DialogContent className="sm:max-w-[425px] bg-gray-900 text-white">
-//               <DialogHeader>
-//                 <DialogTitle>Add New Session</DialogTitle>
-//               </DialogHeader>
-//               <div className="grid gap-4">
-//                 <div className="grid gap-3">
-//                   <Label htmlFor="session-1">Title</Label>
-//                   <Input
-//                     id="session-1"
-//                     name="session"
-//                     placeholder="Session title"
-//                     className="bg-gray-800 placeholder:text-white outline-none"
-//                   />
-//                 </div>
-//                 <div className="grid gap-3">
-//                   <Label htmlFor="tutor">Tutors</Label>
-//                   <Select>
-//                     <SelectTrigger
-//                       id="tutor"
-//                       className="w-full bg-gray-800 border-gray-700 text-white"
-//                     >
-//                       <SelectValue placeholder="Select a tutor" />
-//                     </SelectTrigger>
-//                     <SelectContent className="bg-gray-800 border-gray-700 text-white w-full group data-[state=open]:bg-gray-800">
-//                       <SelectItem
-//                         value="tutor-1"
-//                         className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
-//                       >
-//                         Tutor 1
-//                       </SelectItem>
-//                       <SelectItem
-//                         value="tutor-2"
-//                         className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
-//                       >
-//                         Tutor 2
-//                       </SelectItem>
-//                       <SelectItem
-//                         value="tutor-3"
-//                         className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
-//                       >
-//                         Tutor 3
-//                       </SelectItem>
-//                     </SelectContent>
-//                   </Select>
-//                 </div>
-//                 <div className="flex justify-between align-items gap-3">
-//                   <div className="startTime">
-//                     <Label htmlFor="sTime">Start Time</Label>
-//                     <Input
-//                       type="datetime-local"
-//                       id="sTime"
-//                       name="sTime"
-//                       className="bg-gray-800 placeholder:text-white outline-none"
-//                     />
-//                   </div>
-//                   <div className="endTime">
-//                     <Label htmlFor="eTime">End Time</Label>
-//                     <Input
-//                       type="datetime-local"
-//                       id="eTime"
-//                       name="eTime"
-//                       className="bg-gray-800 placeholder:text-white outline-none"
-//                     />
-//                   </div>
-//                 </div>
-//                 <div className="grid gap-3">
-//                   <Label htmlFor="classroom">Classroom</Label>
-//                   <Select>
-//                     <SelectTrigger className="w-full bg-gray-800 border-gray-700 text-white">
-//                       <SelectValue placeholder="Select a classroom" />
-//                     </SelectTrigger>
-//                     <SelectContent className="bg-gray-800 border-gray-700 text-white w-full group data-[state=open]:bg-gray-800">
-//                       <SelectItem
-//                         value="tronc"
-//                         className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
-//                       >
-//                         Classroom A1
-//                       </SelectItem>
-//                       <SelectItem
-//                         value="1bac"
-//                         className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
-//                       >
-//                         Classroom A2
-//                       </SelectItem>
-//                       <SelectItem
-//                         value="2bac"
-//                         className="hover:bg-purple-600 hover:text-white group-data-[state=open]:data-[state=checked]:bg-purple-800 group-data-[state=open]:data-[state=checked]:text-white data-[state=checked]:bg-purple-500 data-[state=checked]:text-white"
-//                       >
-//                         Classroom B1
-//                       </SelectItem>
-//                     </SelectContent>
-//                   </Select>
-//                 </div>
-//               </div>
-//               <DialogFooter>
-//                 <DialogClose asChild>
-//                   <Button
-//                     variant="outline"
-//                     className="text-black hover:bg-red-500 border hover:border-red-500 duration-300 hover:text-white"
-//                   >
-//                     Cancel
-//                   </Button>
-//                 </DialogClose>
-//                 <Button
-//                   type="submit"
-//                   className="bg-purple-500 duration-300 hover:bg-purple-700"
-//                 >
-//                   Save changes
-//                 </Button>
-//               </DialogFooter>
-//             </DialogContent>
-//           </form>
-//         </Dialog>
+//         <div className="flex space-x-2">
+//           <Button
+//             variant="outline"
+//             className="border-gray-600 text-black hover:bg-blue-500 hover:text-white duration-300"
+//           >
+//             <Download className="w-4 h-4 mr-2" />
+//             Export
+//           </Button>
+//           {/* Pass the onSubmit prop for clarity, though actual session creation will be in SessionDialog */}
+//           <SessionDialog onSubmit={handleCreateSession}>
+//             <Button
+//               variant="outline"
+//               className="inline-flex border-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 bg-purple-600 hover:bg-purple-700 hover:text-white"
+//             >
+//               <Plus className="w-4 h-4 mr-2" /> Schedule New Session
+//             </Button>
+//           </SessionDialog>
+//         </div>
 //       </div>
 
-//       {/* Filters */}
-//       <Card className="bg-gray-900 border-gray-800">
-//         <CardContent className="p-6">
-//           <div className="flex flex-col md:flex-row gap-4">
-//             <div className="relative flex-1">
-//               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-//               <Input
-//                 placeholder="Search sessions..."
-//                 className="pl-10 bg-gray-800 border-gray-700 text-white"
-//               />
-//             </div>
-//             <Select>
-//               <SelectTrigger className="w-full md:w-48 bg-gray-800 border-gray-700 text-white">
-//                 <SelectValue placeholder="Course" />
-//               </SelectTrigger>
-//               <SelectContent className="bg-gray-800 border-gray-700">
-//                 <SelectItem value="all">All Courses</SelectItem>
-//                 <SelectItem value="mathematics">Mathematics</SelectItem>
-//                 <SelectItem value="physics">Physics</SelectItem>
-//                 <SelectItem value="english">English</SelectItem>
-//               </SelectContent>
-//             </Select>
-//             <Select>
-//               <SelectTrigger className="w-full md:w-48 bg-gray-800 border-gray-700 text-white">
-//                 <SelectValue placeholder="Tutor" />
-//               </SelectTrigger>
-//               <SelectContent className="bg-gray-800 border-gray-700">
-//                 <SelectItem value="all">All Tutors</SelectItem>
-//                 <SelectItem value="sarah">Dr. Sarah Ahmed</SelectItem>
-//                 <SelectItem value="hassan">Prof. Hassan Alami</SelectItem>
-//                 <SelectItem value="fatima">Ms. Fatima Benali</SelectItem>
-//               </SelectContent>
-//             </Select>
-//           </div>
-//         </CardContent>
-//       </Card>
-
-//       {/* Sessions Tabs */}
-//       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-//         <TabsList className="grid w-full grid-cols-3 bg-gray-800">
-//           <TabsTrigger
-//             value="today"
-//             className="text-white data-[state=active]:bg-purple-600"
-//           >
-//             Today's Sessions
-//           </TabsTrigger>
-//           <TabsTrigger
-//             value="upcoming"
-//             className="text-white data-[state=active]:bg-purple-600"
-//           >
-//             Upcoming
-//           </TabsTrigger>
-//           <TabsTrigger
-//             value="completed"
-//             className="text-white data-[state=active]:bg-purple-600"
-//           >
-//             Completed
-//           </TabsTrigger>
-//         </TabsList>
-
-//         <TabsContent value="today" className="space-y-4 mt-6">
-//           {sessions.today.map(renderSessionCard)}
-//         </TabsContent>
-
-//         <TabsContent value="upcoming" className="space-y-4 mt-6">
-//           {sessions.upcoming.map(renderSessionCard)}
-//         </TabsContent>
-
-//         <TabsContent value="completed" className="space-y-4 mt-6">
-//           {sessions.completed.map(renderSessionCard)}
-//         </TabsContent>
-//       </Tabs>
-
-//       {/* Session Statistics */}
-//       <div className="grid md:grid-cols-4 gap-6">
-//         <Card className="bg-gray-900 border-gray-800">
-//           <CardHeader>
-//             <CardTitle className="text-white text-lg">
-//               Today's Sessions
-//             </CardTitle>
-//           </CardHeader>
-//           <CardContent>
-//             <div className="text-3xl font-bold text-purple-400">8</div>
-//             <p className="text-gray-400 text-sm">3 completed, 5 scheduled</p>
-//           </CardContent>
-//         </Card>
-
-//         <Card className="bg-gray-900 border-gray-800">
-//           <CardHeader>
-//             <CardTitle className="text-white text-lg">
-//               Weekly Sessions
-//             </CardTitle>
-//           </CardHeader>
-//           <CardContent>
-//             <div className="text-3xl font-bold text-blue-400">45</div>
-//             <p className="text-gray-400 text-sm">+8% from last week</p>
-//           </CardContent>
-//         </Card>
-
-//         <Card className="bg-gray-900 border-gray-800">
-//           <CardHeader>
-//             <CardTitle className="text-white text-lg">
-//               Attendance Rate
-//             </CardTitle>
-//           </CardHeader>
-//           <CardContent>
-//             <div className="text-3xl font-bold text-green-400">92%</div>
-//             <p className="text-gray-400 text-sm">Average attendance</p>
-//           </CardContent>
-//         </Card>
-
-//         <Card className="bg-gray-900 border-gray-800">
-//           <CardHeader>
-//             <CardTitle className="text-white text-lg">Session Hours</CardTitle>
-//           </CardHeader>
-//           <CardContent>
-//             <div className="text-3xl font-bold text-yellow-400">156</div>
-//             <p className="text-gray-400 text-sm">Total hours this week</p>
-//           </CardContent>
-//         </Card>
-//       </div>
+//       <SessionFilters />
+//       {/* Pass sessions from the store to SessionTabs */}
+//       <SessionTabs sessions={sessions} onDelete={handleDelete} />
+//       <SessionStats />
 //     </div>
 //   );
-// };
+// }
 
-// export default AdminSessions;
+// // app/admin/sessions/page.tsx
+// import { useEffect, useState } from "react";
+// import { Button } from "@/components/ui/button";
+// import { Plus, Download } from "lucide-react";
+// import { SessionFilters } from "./sessionCompos/SessionFilters";
+// import { SessionTabs } from "./sessionCompos/SessionTabs";
+// import { SessionDialog } from "./sessionCompos/SessionDialog";
+// import { SessionStats } from "./sessionCompos/SessionStats";
+// import { useSessionsActions } from "@/stores/sessionStore";
+// import { getAllSession } from "@/apis/sessionApis";
+// import { ISessionPop } from "@/types/sessionTypes";
+
+// export default function AdminSessions() {
+//   const [activeTab, setActiveTab] = useState("today");
+//   const [sessions, setSessions] = useState<ISessionPop[]>([]);
+
+//   const { deleteSession } = useSessionsActions();
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       if (!sessions || sessions.length === 0) {
+//         const seshs = await getAllSession();
+//         setSessions(seshs.data);
+//       }
+//     };
+//     fetchSessions();
+//   }, [sessions.length, getAllSession]);
+
+//   const handleDelete = async (id: string) => {
+//     await deleteSession(id);
+//     setSessions((prev) => prev.filter((s) => s._id !== id)); // Update state
+//   };
+
+//   const handleCreateSession = (sessionData: any) => {
+//     console.log("Creating new session:", sessionData);
+//   };
+
+//   return (
+//     <div className="p-8 space-y-8">
+//       {/* Header */}
+//       <div className="flex items-center justify-between">
+//         <div>
+//           <h1 className="text-3xl font-bold text-white mb-2">
+//             Session Management
+//           </h1>
+//           <p className="text-gray-400">
+//             Schedule sessions, manage attendance, and track progress
+//           </p>
+//         </div>
+//         <div className="flex space-x-2">
+//           <Button
+//             variant="outline"
+//             className="border-gray-600 text-black hover:bg-blue-500 hover:text-white duration-300"
+//           >
+//             <Download className="w-4 h-4 mr-2" />
+//             Export
+//           </Button>
+//           <SessionDialog onSubmit={handleCreateSession}>
+//             <Button
+//               variant="outline"
+//               className="inline-flex border-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 bg-purple-600 hover:bg-purple-700 hover:text-white"
+//             >
+//               <Plus className="w-4 h-4 mr-2" /> Schedule New Session
+//             </Button>
+//           </SessionDialog>
+//         </div>
+//       </div>
+
+//       <SessionFilters />
+//       <SessionTabs sessions={sessions} onDelete={handleDelete} />
+//       <SessionStats />
+//     </div>
+//   );
+// }
