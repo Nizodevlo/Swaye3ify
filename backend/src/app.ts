@@ -30,6 +30,7 @@ import gradeRouter from './routes/gradeRoutes';
 import subjectRouter from './routes/subjectRoutes';
 import dayRouter from './routes/dayRoutes';
 import authRouter from './routes/authRoutes';
+import tutorRouter from './routes/tutorRoutes';
 
 // *********
 // **VARIABLES**
@@ -101,6 +102,7 @@ app.use('/api/v1/days', dayRouter);
 app.use('/api/v1/salles', salleRouter);
 app.use('/api/v1/grades', gradeRouter);
 app.use('/api/v1/subjects', subjectRouter);
+app.use('/api/v1/tutors', tutorRouter);
 
 // *********
 // EXECUTION
