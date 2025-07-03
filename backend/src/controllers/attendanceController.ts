@@ -4,6 +4,7 @@ import ApiError from '../utils/apiError';
 import ApiResponse from '../utils/apiResponse';
 import { asyncHandler } from '../utils/asyncHandler';
 
+
 export const getAttendances = asyncHandler(async (req: Request, res: Response) => {
   const attendances = await Attendance.find();
   res.status(200).send(new ApiResponse(200, attendances, 'Attendances fetched successfully'));
